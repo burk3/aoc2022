@@ -28,7 +28,6 @@ class Monkey(NamedTuple):
     test: int
     iftrue: int
     iffalse: int
-    items: list[int]
 
     @classmethod
     def new(
@@ -51,39 +50,7 @@ class Monkey(NamedTuple):
             test,
             iftrue,
             iffalse,
-            [],
         )
-
-    def reset(self) -> None:
-        self.items.clear()
-        self.items.extend(self.starting)
-
-    def inspect(self, old: int) -> int:
-        val: int
-        val = self.op_val + (self.op_old_fac * old)
-        return OP_LUT[self.op_type](old, val)
-
-    @staticmethod
-    def relief(old: int) -> int:
-        return old // 3
-
-    def throw(self, item: int) -> int:
-        if item % self.test == 0:
-            return self.iftrue
-        else:
-            return self.iffalse
-
-    def catch(self, item: int) -> None:
-        self.items.append(item)
-
-    def take_turn(self, relief=True) -> Iterator[Throw]:
-        for item in self.items:
-            item = self.inspect(item)
-            if relief:
-                item = self.relief(item)
-            yield Throw(item, self.throw(item))
-        self.items.clear()
-
 
 ws = regex(r"\s+", re.MULTILINE)
 num = regex(r"\d+")
